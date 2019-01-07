@@ -65,28 +65,36 @@ This repository was created with the intention of my own summary of [33-js-conce
 
 ### Articles
 
- * 📜 [Understanding Javascript Call Stack, Event Loops — Gaurav Pandvia](https://medium.com/@gaurav.pandvia/understanding-javascript-function-executions-tasks-event-loop-call-stack-more-part-1-5683dea1f5ec)
- * 📜 [Understanding the JavaScript Call Stack — Charles Freeborn](https://medium.freecodecamp.org/understanding-the-javascript-call-stack-861e41ae61d4)
- * 📜 [Javascript: What Is The Execution Context? What Is The Call Stack? — Valentino Gagliardi](https://www.valentinog.com/blog/js-execution-context-call-stack/)
- * 📜 [What is the JS Event Loop and Call Stack? — Jess Telford](https://gist.github.com/jesstelford/9a35d20a2aa044df8bf241e00d7bc2d0)
- * 📜 [Call Stack — MDN](https://developer.mozilla.org/en-US/docs/Glossary/Call_stack)
- * 📜 [Understanding Execution Context and Execution Stack in Javascript — Sukhjinder Arora](https://blog.bitsrc.io/understanding-execution-context-and-execution-stack-in-javascript-1c9ea8642dd0)
- * 📜 [How JavaScript Works: An Overview of the Engine, the Runtime, and the Call Stack — Alexander Zlatkov](https://blog.sessionstack.com/how-does-javascript-actually-work-part-1-b0bacc073cf)
- * 📜 [The Ultimate Guide to Execution Contexts, Hoisting, Scopes, and Closures in JavaScript — Tyler McGinnis](https://tylermcginnis.com/ultimate-guide-to-execution-contexts-hoisting-scopes-and-closures-in-javascript/) 
+* 📜 [Understanding the JavaScript Call Stack — Charles Freeborn](https://medium.freecodecamp.org/understanding-the-javascript-call-stack-861e41ae61d4)
 
-### Videos
+### Summary
 
- * 🎥 [Javascript: the Call Stack explained — Coding Blocks India](https://www.youtube.com/watch?v=w6QGEiQceOM)
- * 🎥 [The JS Call Stack Explained In 9 Minutes — Colt Steele](https://www.youtube.com/watch?v=W8AeMrVtFLY)
- * 🎥 [JavaScript Execution Stack — Codecademy](https://www.youtube.com/watch?v=jT0USJeNFEA)
- * 🎥 [What is the Call Stack? — Eric Traub](https://www.youtube.com/watch?v=w7QWQlkLY_s)
- * 🎥 [The Call Stack — Kevin Drumm](https://www.youtube.com/watch?v=Q2sFmqvpBe0)
- * 🎥 [Understanding JavaScript Execution — Codesmith](https://www.youtube.com/watch?v=Z6a1cLyq7Ac&list=PLWrQZnG8l0E4kd1T_nyuVoxQUaYEWFgcD)
- * 🎥 [Call Stack & Event Loop — movies com](https://www.youtube.com/watch?v=mk0lu9MKBto)
- * 🎥 [The Ultimate Guide to Execution Contexts, Hoisting, Scopes, and Closures in JavaScript — Tyler McGinnis](https://www.youtube.com/watch?v=Nt-qa_LlUH0)
-  * 🎥 [What the heck is the event loop anyway? — Philip Roberts](https://www.youtube.com/watch?v=8aGhZQkoFbQ)
+Just an normal LIFO(Last In First Out) function call stack. If you already took a programming lauguage class, it's obvious. Just a call stack frame.
 
-**[⬆ Back to Top](#table-of-contents)**
+```js
+function firstFunction(){
+ console.log("Hello from firstFunction");
+}
+function secondFunction(){
+ firstFunction();
+ console.log("The end from secondFunction");
+}
+
+// prints
+// "Hello from firstFunction"
+// "The end from secondFunction"
+secondFunction();
+
+/*
+stack
+==============
+     ...
+     ...
+firstFunction
+secondFunction
+==============
+*/
+```
 
 ---
 
@@ -94,22 +102,54 @@ This repository was created with the intention of my own summary of [33-js-conce
 
 ### Articles
 
- * 📜 [How numbers are encoded in JavaScript — Dr. Axel Rauschmayer](http://2ality.com/2012/04/number-encoding.html)
- * 📜 [What You Need to Know About JavaScript Number Type — Max Wizard K](https://medium.com/dailyjs/javascripts-number-type-8d59199db1b6)
- * 📜 [What Every JavaScript Developer Should Know About Floating Point Numbers — Chewxy](https://blog.chewxy.com/2014/02/24/what-every-javascript-developer-should-know-about-floating-point-numbers/)
- * 📜 [The Secret Life of JavaScript Primitives — Angus Croll](https://javascriptweblog.wordpress.com/2010/09/27/the-secret-life-of-javascript-primitives/)
- * 📜 [Primitive Types — Flow](https://flow.org/en/docs/types/primitives/)
- * 📜 [(Not) Everything in JavaScript is an Object - Daniel Li](http://blog.brew.com.hk/not-everything-in-javascript-is-an-object/)
- * 📜 [JavaScript data types and data structures - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Primitive_values)
+* 📜 [Primitive Types — Flow](https://flow.org/en/docs/types/primitives/)
+* 📜 [(Not) Everything in JavaScript is an Object - Daniel Li](http://blog.brew.com.hk/not-everything-in-javascript-is-an-object/)
 
-### Videos
+### Summary
 
- * 🎥 [JavaScript Reference vs Primitive Types — Academind](https://www.youtube.com/watch?v=9ooYYRLdg_g)
- * 🎥 [JavaScript Primitive Types — Simon Sez IT](https://www.youtube.com/watch?v=HsbWQsSCE5Y)
- * 🎥 [Value Types and Reference Types in JavaScript — Programming with Mosh](https://www.youtube.com/watch?v=e-_mDyqm2oU)
- * 🎥 [JavaScript Primitive Data Types — Avelx](https://www.youtube.com/watch?v=qw3j0A3DIzQ)
- * 🎥 [Everything you never wanted to know about JavaScript numbers — Bartek Szopka](https://www.youtube.com/watch?v=MqHDDtVYJRI)
- * 🎥 [What are variables in Javascript? — JS For Everyone](https://www.youtube.com/watch?v=B4Bbmei_thw)
+* boolean
+* null
+* undefined
+* number
+* string
+* symbol (new in ECMAScript 2015)
+
+```js
+// literals
+true                 // boolean
+"hello"              // string
+3                    // number
+3.14                 // number
+null                 // null
+undefined            // undefined
+
+// wrappers
+new Boolean(false)   // Boolean
+new String("hello")  // String
+new Number(3)        // Number
+new Number(3.14)     // Number
+Symbol("foo")        // Symbol
+```
+
+All others are object type including `function` and `array`.
+
+```js
+// function
+const foo = function () {}
+foo instanceof Object // true
+```
+
+Primitive types have no methods so they are immutable. But if you try to use method of primitive types, js engine automatically convert primitive type into its wrapper which is called **auto-boxing**
+
+```js
+const pet = new String("cat")
+pet.length   // 3
+"cat".length // 3
+
+const foo = 42
+foo.bar = "baz" // create an new object and assign to it
+foo.bar         // undefined since the "baz" is assigned to temp wrapper object
+```
 
 **[⬆ Back to Top](#table-of-contents)**
 
@@ -119,20 +159,41 @@ This repository was created with the intention of my own summary of [33-js-conce
 
 ### Articles
 
- * 📜 [Explaining Value vs. Reference in Javascript — Arnav Aggarwal](https://codeburst.io/explaining-value-vs-reference-in-javascript-647a975e12a0)
- * 📜 [Understand Value and Reference Types in JavaScript — Zsolt Nagy](https://www.zsoltnagy.eu/understand-value-and-reference-types-in-javascript/)
- * 📜 [Primitive Types & Reference Types in JavaScript — Bran van der Meer](https://gist.github.com/branneman/7fb06d8a74d7e6d4cbcf75c50fec599c)
- * 📜 [Value Types, Reference Types and Scope in JavaScript — Ben Aston](https://medium.com/@benastontweet/lesson-1b-javascript-fundamentals-380f601ba851)
- * 📜 [Back to roots: JavaScript Value vs Reference — Miro Koczka](https://medium.com/dailyjs/back-to-roots-javascript-value-vs-reference-8fb69d587a18)
- * 📜 [Grasp “By Value” and “By Reference” in JavaScript — Léna Faure](https://hackernoon.com/grasp-by-value-and-by-reference-in-javascript-7ed75efa1293)
- * 📜 [JavaScript Reference and Copy Variables — Vítor Capretz](https://hackernoon.com/javascript-reference-and-copy-variables-b0103074fdf0)
- * 📜 [JavaScript Primitive vs Reference Values](http://www.javascripttutorial.net/javascript-primitive-vs-reference-values/)
- * 📜 [JavaScript by Reference vs. by Value — nrabinowitz](https://stackoverflow.com/questions/6605640/javascript-by-reference-vs-by-value)
+* 📜 [Grasp “By Value” and “By Reference” in JavaScript — Léna Faure](https://hackernoon.com/grasp-by-value-and-by-reference-in-javascript-7ed75efa1293)
 
-### Videos
 
- * 🎥 [Javascript Pass by Value vs Pass by Reference — techsith](https://www.youtube.com/watch?v=E-dAnFdq8k8)
- * 🎥 [JavaScript Value vs Reference Types — Programming with Mosh](https://www.youtube.com/watch?v=fD0t_DKREbE)
+### Summary
+
+Primitive Data Types are passed By Value and Objects are passed By Reference. That's it.
+
+* Primitive Data Types : deep copy
+* Objects              : shadow copy
+
+```js
+// primitive type
+var firstName = "A";
+var secondName = firstName;
+firstName = "B";
+console.log(firstName);  // "B"
+console.log(secondName); // "A"
+
+// object
+var myName = {
+  firstName: "A"
+};
+var identity = myName;
+myName.firstName = "B";
+console.log(myName.firstName); // "B"
+console.log(identity.firstName); // "B"
+
+// object
+function myNameIs(aName){
+  aName.firstName = "Carla";
+}
+var myName = {};
+myNameIs(myName);
+console.log(myName); // Object {firstName: "Carla"}
+```
 
 **[⬆ Back to Top](#table-of-contents)**
 
@@ -142,18 +203,206 @@ This repository was created with the intention of my own summary of [33-js-conce
 
 ### Articles
 
- * 📜 [What you need to know about Javascript's Implicit Coercion — Promise Tochi](https://dev.to/promhize/what-you-need-to-know-about-javascripts-implicit-coercion-e23)
- * 📜 [JavaScript Type Coercion Explained — Alexey Samoshkin](https://medium.freecodecamp.org/js-type-coercion-explained-27ba3d9a2839)
- * 📜 [Javascript Coercion Explained — Ben Garrison](https://hackernoon.com/javascript-coercion-explained-545c895213d3)
- * 📜 [What exactly is Type Coercion in Javascript? - Stack Overflow](https://stackoverflow.com/questions/19915688/what-exactly-is-type-coercion-in-javascript)
- * 📜 [You Don't Know JS: Types & Grammar [Book] — Kyle Simpson](https://www.oreilly.com/library/view/you-dont-know/9781491905159/ch04.html)
- * 📜 [Type Coercion in JavaScript, and why everyone gets it wrong.](https://thedevs.network/blog/type-coercion-in-javascript-and-why-everyone-gets-it-wrong)
+* 📜 [What you need to know about Javascript's Implicit Coercion — Promise Tochi](https://dev.to/promhize/what-you-need-to-know-about-javascripts-implicit-coercion-e23)
 
- ### Videos
+### Summary
 
- * 🎥 [== ? === ??? ...#@^% - Shirmung Bielefeld](https://www.youtube.com/watch?v=qGyqzN0bjhc&t)
- * 🎥 [Coercion in Javascript - Hitesh Choudhary](https://www.youtube.com/watch?v=b04Q_vyqEG8)
- * 🎥 [JavaScript Questions: What is Coercion? - Steven Hancock](https://www.youtube.com/watch?v=z4-8wMSPJyI)
+You know that it should be avoided. Use explicit coercion instead.
+
+#### Non-numeric values in numeric expressions
+
+String : for `-, *, /, %` calling `Number` wrapper function
+
+```js
+3 * "3" // 3 * 3
+3 * Number("3") // 3 * 3
+Number("5") // 5
+
+Number("1.") // 1
+Number("1.34") // 1.34
+Number("0") // 0
+Number("012") // 12
+
+Number("1,") // NaN
+Number("1+1") // NaN
+Number("1a") // NaN
+Number("text") // NaN
+```
+
+String : for `+` convert number to string by calling `String` wrapper function
+
+```js
+// concatenation
+1 + "2" // "12"
+1 + "js" // "1js"
+
+// addition
+1 + 2 // 3
+1 + 2 + 1 // 4
+
+// addition, then concatenation
+1 + 2 + "1" // "31"
+(1 + 2) + "1" // "31"
+
+// concatenation all through
+1 + "2" + 1 // "121"
+(1 + "2") + 1 // "121"
+```
+
+Object : call `toString` and convert it to number by calling `Number` wrapper
+
+```js
+// default toString method
+const foo = {}
+foo.toString() // [object Object]
+
+// overrided toString method
+const baz = {
+  toString: () => "I'm object baz"
+}
+baz + "!" // "I'm object baz!"
+
+
+// toString method used as numeric expression with number return
+const foo = {
+  toString: () => 4
+}
+2 * foo // 8
+2 / foo // 0.5
+2 + foo // 6
+"four" + foo // "four4"
+
+// toString method used as numeric expression with string return
+const baz = {
+  toString: () => "four"
+}
+2 * baz // NaN
+2 + baz // 2four
+
+// toString method used as numeric expression with number convertable string return
+const bar = {
+  toString: () => "2"
+}
+2 + bar // "22"
+2 * bar // 4
+```
+
+Object : call `valueOf` if its defined
+
+```js
+const bar = {
+  toString: () => 2, // ignored
+  valueOf: () => 5
+}
+
+"sa" + bar // "sa5"
+3 * bar // 15
+2 + bar // 7
+```
+
+Arrays : also object, call `toString` method
+
+```js
+// default toString method of array
+[1,2,3].toString() // "1,2,3"
+[1,2,3].join() // "1,2,3"
+[].toString() // ""
+[].join() // ""
+
+// toString method with concat
+"me" + [1,2,3] // "me1,2,3"
+4 + [1,2,3] // "41,2,3"
+
+// toString method with numeric expression1
+4 * [] // 0
+
+// similar to
+4 * Number([].toString())
+4 * Number("")
+4 * 0
+
+// toString method with numeric expression2
+4 / [2] // 2
+
+// similar to
+4 / Number([2].toString())
+4 / Number("2")
+4 / 2
+
+// toString method with numeric expression3
+4 * [1,2,3] // NaN
+```
+
+`True` is 1, `False` and `""` are 0
+
+```js
+Number(true) // 1
+Number(false) // 0
+Number("") // 0
+
+4 + true // 5
+3 * false // 0
+3 * "" // 0
+3 + "" // "3", in '+' string concat is first
+```
+
+#### Falsy and Truthy 
+
+Falsy values
+
+* false
+* 0
+* null
+* undefined
+* ""
+* NaN
+* -0
+
+Everything else is truthy
+
+```js
+
+// falsy
+if (-1)
+if (null)
+if (undefined)
+if ("")
+
+// truthy
+if (-1) 
+if ("0")
+if ({})
+
+const counter = 2
+if (counter) // true
+```
+
+#### NaN (Not a Number)
+
+NaN is a special numeric value that is not equal to itself
+
+```js
+NaN === NaN // false
+
+const notANumber = 3 * "a" // NaN
+notANumber == notANumber // false
+notANumber === notANumber // false
+```
+
+To check `NaN`
+
+```js
+// classical
+if (notANumber !== notANumber)
+
+// ECMAScript 6 introduced
+Number.isNaN(NaN) // true
+Number.isNaN("name") // false
+
+// avoid global NaN since it try to convert Number first
+isNaN("name") // true since Number("name") returns NaN
+isNaN("1") // false since Number("1") returns NaN
+```
 
 **[⬆ Back to Top](#table-of-contents)**
 
@@ -425,7 +674,7 @@ This repository was created with the intention of my own summary of [33-js-conce
  * 🎥 [bind and this - Object Creation in JavaScript - FunFunFunction](https://www.youtube.com/watch?v=GhbhD1HR5vk)
  * 🎥 [JavaScript Practical Applications of Call, Apply and Bind functions — techsith](https://www.youtube.com/watch?v=AYVYxezrMWA)
  * 🎥 [JS Function Methods call(), apply(), and bind() — Steve Griffith](https://www.youtube.com/watch?v=uBdH0iB1VDM)
- 
+
 **[⬆ Back to Top](#table-of-contents)**
 
 ---
@@ -744,7 +993,7 @@ This repository was created with the intention of my own summary of [33-js-conce
  * 🎥 [Promises — Fun Fun Function](https://www.youtube.com/watch?v=2d7s3spWAzo)
  * 🎥 [Error Handling Promises in JavaScript — Fun Fun Function](https://www.youtube.com/watch?v=f8IgdnYIwOU)
  * 🎥 [Promises Part 1 - Topics of JavaScript/ES6 — The Coding Train](https://www.youtube.com/watch?v=QO4NXhWo_NM)
- 
+
 **[⬆ Back to Top](#table-of-contents)**
 
 ---
