@@ -346,7 +346,7 @@ Number("") // 0
 3 + "" // "3", in '+' string concat is first
 ```
 
-#### Falsy and Truthy 
+#### Falsy and Truthy
 
 Falsy values
 
@@ -369,7 +369,7 @@ if (undefined)
 if ("")
 
 // truthy
-if (-1) 
+if (-1)
 if ("0")
 if ({})
 
@@ -562,17 +562,91 @@ isNaN("1") // false since Number("1") returns NaN
 
 ### Articles
 
- * 📜 [JavaScript Engines — Jen Looper](http://www.softwaremag.com/javascript-engines/)
- * 📜 [Understanding How the Chrome V8 Engine Translates JavaScript into Machine Code — DroidHead](https://medium.freecodecamp.org/understanding-the-core-of-nodejs-the-powerful-chrome-v8-engine-79e7eb8af964)
- * 📜 [Understanding V8’s Bytecode — Franziska Hinkelmann](https://medium.com/dailyjs/understanding-v8s-bytecode-317d46c94775)
- * 📜 [How the V8 engine works? — Thibault Laurens](http://thibaultlaurens.github.io/javascript/2013/04/29/how-the-v8-engine-works/)
- * 📜 [A Brief History of Google’s V8 Javascript Engine — Clair Smith](https://www.mediacurrent.com/blog/brief-history-googles-v8-javascript-engine/)
- * 📜 [JavaScript essentials: why you should know how the engine works - Rainer Hahnekamp](https://medium.freecodecamp.org/javascript-essentials-why-you-should-know-how-the-engine-works-c2cc0d321553)
+* 📜 [JavaScript Engines — Jen Looper](http://www.softwaremag.com/javascript-engines/)
+* 📜 [JavaScript essentials: why you should know how the engine works - Rainer Hahnekamp](https://medium.freecodecamp.org/javascript-essentials-why-you-should-know-how-the-engine-works-c2cc0d321553)
 
+### Summary
 
-### Videos
+Just a javascript engine capable of running javascript code. Implementation of ECMAScript standards.
 
- * 🎥 [JavaScript Engines: The Good Parts™ — Mathias Bynens & Benedikt Meurer](https://www.youtube.com/watch?v=5nmpokoRaZI)
+Modern js engines combine
+
+* Fast application startup of interpreter
+* Fast execution of compiler
+
+To do this, js engines flag frequently used code and pass them to a compiler.
+
+#### Inline Caching (IC)
+
+The engine keep an shape of objects for effective memory lookup which is called object shape or 'type'. For two object to share same type, both object must have exactly the same properties in the same order.
+
+```js
+// which is faster since all the objects have the same shape
+(() => {
+  const han = {firstname: "Han", lastname: "Solo"};
+  const luke = {firstname: "Luke", lastname: "Skywalker"};
+  const yoda = {firstname: "", lastname: "Yoda"};
+  const people = [
+    han, luke, yoda
+  ];
+  const getName = (person) => person.lastname;
+  console.time("engine");
+  for(var i = 0; i < 1000 * 1000 * 1000; i++) {
+    getName(people[i & 2]);
+  }
+  console.timeEnd("engine");
+})();
+
+// which is slower then previous one since all the objects are in different shape
+(() => {
+  const han = {
+    firstname: "Han", lastname: "Solo",
+    spacecraft: "Falcon"
+  };
+  const luke = {
+    firstname: "Luke", lastname: "Skywalker",
+    job: "Jedi"
+  };
+  const yoda = {lastname: "Yoda"};
+  const people = [
+    han, luke, yoda
+  ];
+  const getName = (person) => person.lastname;
+  console.time("engine");
+  for(var i = 0; i < 1000 * 1000 * 1000; i++) {
+    getName(people[i & 2]);
+  }
+  console.timeEnd("engine");
+})();
+
+// here is a solution (make them in the same shape)
+(() => {
+  const han = {
+    firstname: "Han", lastname: "Solo",
+    job: "",
+    spacecraft: "Falcon"
+  };
+  const luke = {
+    firstname: "Luke", lastname: "Skywalker",
+    job: "Jedi",
+    spacecraft: ""
+   };
+  const yoda = {
+    firstname: "Luke", lastname: "Yoda",
+    job: "",
+    spacecraft: ""
+  };
+  const people = [
+    han, luke, yoda
+  ];
+  const getName = (person) => person.lastname;
+  console.time("engine");
+  for(var i = 0; i < 1000 * 1000 * 1000; i++) {
+    getName(people[i & 2]);
+  }
+  console.timeEnd("engine");
+})();
+```
 
 **[⬆ Back to Top](#table-of-contents)**
 
@@ -582,15 +656,54 @@ isNaN("1") // false since Number("1") returns NaN
 
 ### Articles
 
- * 📜 [Programming with JS: Bitwise Operations — Alexander Kondov](https://hackernoon.com/programming-with-js-bitwise-operations-393eb0745dc4)
- * 📜 [Using JavaScript’s Bitwise Operators in Real Life — ian m](https://codeburst.io/using-javascript-bitwise-operators-in-real-life-f551a731ff5)
- * 📜 [JavaScript Bitwise Operators — w3resource](https://www.w3resource.com/javascript/operators/bitwise-operator.php)
- * 📜 [Bitwise Operators in Javascript — Joe Cha](https://medium.com/bother7-blog/bitwise-operators-in-javascript-65c4c69be0d3)
- * 📜 [A Comprehensive Primer on Binary Computation and Bitwise Operators in Javascript — Paul Brown](https://medium.com/techtrument/a-comprehensive-primer-on-binary-computation-and-bitwise-operators-in-javascript-81acf8341f04)
+* 📜 [Using JavaScript’s Bitwise Operators in Real Life — ian m](https://codeburst.io/using-javascript-bitwise-operators-in-real-life-f551a731ff5)
+* 📜 [JavaScript Bitwise Operators — w3resource](https://www.w3resource.com/javascript/operators/bitwise-operator.php)
 
- ### Videos
+### Summary
 
- * 🎥 [JavaScript Bitwise Operators — Programming with Mosh](https://www.youtube.com/watch?v=mesu75PTDC8)
+* AND `a & b`         : Both left and right operands are ones.
+* OR `a | b`          : Either left or right operand is one.
+* XOR `a ^ b`         : Not both left and right operand are one.
+* NOT `~a`            : Flips the bits of its operand.
+* Left shift `a << b` : Shifts b bits to the left, fill in zeros from the right.
+* Sign-propagating right shift `a >> b` : Shifts b bits to the right, discarding bits shifted off, and keep the sign bit.
+* Zero-fill right shift `a >>> b` : Shifts b bits to the right, discarding bits shifted off, and fill in zeros from the left.
+
+```js
+// an objects with multiple properties
+// How to check foo2 == true && foo4 == true; What about other combination?
+// We need 2**4 combination...
+const hasFoo2andFoo4 = {
+  foo1: false,
+  foo2: true,
+  foo3: false,
+  foo4: true
+}
+
+// solution
+const HAS_FOO1 = 1;       // 0001
+const HAS_FOO2 = 1 << 1;  // 0010
+const HAS_FOO3 = 1 << 2;  // 0100
+const HAS_FOO4 = 1 << 3;  // 1000
+let myBitNumber = 0;
+if (myObject['foo1'] === true)
+  myBitNumber = myBitNumber | HAS_FOO1;
+if (myObject['foo2'] === true)
+  myBitNumber = myBitNumber | HAS_FOO2;
+if (myObject['foo3'] === true)
+  myBitNumber = myBitNumber | HAS_FOO3;
+if (myObject['foo4'] === true)
+  myBitNumber = myBitNumber | HAS_FOO4;
+console.log(myBitNumber.toString(2)); // 1010
+
+// usage
+if (myBitNumber & (HAS_FOO1 | HAS_FOO2)) {
+  // True!
+}
+if (myBitNumber & (HAS_FOO1 | HAS_FOO3)) {
+  // False
+}
+```
 
 **[⬆ Back to Top](#table-of-contents)**
 
@@ -600,20 +713,64 @@ isNaN("1") // false since Number("1") returns NaN
 
 ### Articles
 
- * 📜 [How To Understand and Modify the DOM in JavaScript — Tania Rascia](https://www.digitalocean.com/community/tutorials/introduction-to-the-dom)
  * 📜 [What’s the Document Object Model, and why you should know how to use it — Leonardo Maldonado](https://medium.freecodecamp.org/whats-the-document-object-model-and-why-you-should-know-how-to-use-it-1a2d0bc5429d)
- * 📜 [JavaScript DOM Tutorial with Example — Guru99](https://www.guru99.com/how-to-use-dom-and-events-in-javascript.html)
- * 📜 [What is the DOM? — Chris Coyier](https://css-tricks.com/dom/)
  * 📜 [Traversing the DOM with JavaScript — Zell Liew](https://zellwk.com/blog/dom-traversals/)
- * 📜 [Eloquent JavaScript [Book] — The Document Object Model](https://eloquentjavascript.net/14_dom.html)
- * 📜 [DOM Tree](https://javascript.info/dom-nodes)
- * 📜 [How to traverse the DOM in Javascript — Vojislav Grujić](https://medium.com/javascript-in-plain-english/how-to-traverse-the-dom-in-javascript-d6555c335b4e)
- * 📜 [Render Tree Construction — Ilya Grigorik](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/render-tree-construction)
 
- ### Videos
+### Summary
 
- * 🎥 [JavaScript DOM — The Net Ninja](https://www.youtube.com/watch?v=FIORjGvT0kk)
- * 🎥 [JavaScript DOM Crash Course — Traversy Media](https://www.youtube.com/watch?v=0ik6X4DJKCc)
+The DOM (Document Object Model) : represents how HTML and XML documents are read by the browser. Javascript can interact with DOM node.
+
+```html
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Entendendo o DOM (Document Object Model)</title>
+</head>
+<body>
+  <div class="container">
+    <h1><time>00:00:00</time></h1>
+    <button id="start">Start</button>
+    <button id="stop">Stop</button>
+    <button id="reset">Reset</button>
+  </div>
+</body>
+</html>
+
+<script>
+// Methods
+var myStart = document.getElementById('start');
+var myContainer = document.getElementsByClassName('container');
+var buttons = document.getElementsByTagName('button'); // returns button elements
+var resetButton = document.querySelector('#reset'); // returns first element with 'reset'
+var noneButton = document.querySelector('#none'); // returns null
+var myButtons = document.querySelectorAll('#reset'); // returns elements with 'reset'
+
+// Events
+myStart.addEventListener('click', function(event) {
+  alert('Start clicked!');
+}, false);
+resetButton.addEventListener('click', function(event) {
+  console.log("Reset selected");
+}, false);
+
+// DOM Traversing
+var container = document.querySelector('.container');
+var getContainerChilds = container.childNodes; // children of .container
+var getFirstChild = container.firstChild; // first child of .container
+var getName = container.nodeName; // get node name, here 'div'
+var getValue = container.nodeValue; // get text and comments of node, here null
+
+// Element traversing, recommanded
+var getParent = container.parentNode;
+var getValue = container.firstElementChild;
+var getValue = container.lastElementChild;
+</script>
+```
+
+[see also](https://www.w3schools.com/jsref/prop_node_nodetype.asp)
 
 **[⬆ Back to Top](#table-of-contents)**
 
@@ -623,21 +780,170 @@ isNaN("1") // false since Number("1") returns NaN
 
 ### Articles
 
- * 📜 [How To Use Classes in JavaScript — Tania Rascia](https://www.digitalocean.com/community/tutorials/understanding-classes-in-javascript)
- * 📜 [Javascript Classes — Under The Hood — Majid](https://medium.com/tech-tajawal/javascript-classes-under-the-hood-6b26d2667677)
- * 📜 [ES6 Classes — Nathaniel Foster](https://www.javascriptjanuary.com/blog/es6-classes)
- * 📜 [Better JavaScript with ES6, Pt. II: A Deep Dive into Classes ― Peleke Sengstacke](https://scotch.io/tutorials/better-javascript-with-es6-pt-ii-a-deep-dive-into-classes)
- * 📜 [Understand the Factory Design Pattern in Plain JavaScript — Aditya Agarwal](https://medium.com/front-end-hacking/understand-the-factory-design-pattern-in-plain-javascript-20b348c832bd)
- * 📜 [Factory Functions in JavaScript — Josh Miller](https://atendesigngroup.com/blog/factory-functions-javascript)
- * 📜 [The Factory Pattern in JS ES6 — SnstsDev](https://medium.com/@SntsDev/the-factory-pattern-in-js-es6-78f0afad17e9)
- * 📜 [Class vs Factory function: exploring the way forward — Cristi Salcescu](https://medium.freecodecamp.org/class-vs-factory-function-exploring-the-way-forward-73258b6a8d15)
- * 📜 [How ES6 classes really work and how to build your own — Robert Grosse](https://medium.com/@robertgrosse/how-es6-classes-really-work-and-how-to-build-your-own-fd6085eb326a)
+* 📜 [How To Use Classes in JavaScript — Tania Rascia](https://www.digitalocean.com/community/tutorials/understanding-classes-in-javascript)
+* 📜 [Javascript Classes — Under The Hood — Majid](https://medium.com/tech-tajawal/javascript-classes-under-the-hood-6b26d2667677)
+* 📜 [Class vs Factory function: exploring the way forward — Cristi Salcescu](https://medium.freecodecamp.org/class-vs-factory-function-exploring-the-way-forward-73258b6a8d15)
 
- ### Videos
+### Summary
 
- * 🎥 [JavaScript Factory Functions — Programming with Mosh](https://www.youtube.com/watch?v=jpegXpQpb3o)
- * 🎥 [Factory Functions in JavaScript — Fun Fun Function](https://www.youtube.com/watch?v=ImwrezYhw4w)
- * 🎥 [Javascript Tutorial Function Factories — Crypto Chan](https://www.youtube.com/watch?v=R7-IwpH80UE)
+#### ECMAScript 2015 class basic
+
+Every object in JavaScript has a hidden internal property called [[Prototype]] that can be used to extend object properties and methods.
+
+```js
+// A class is also a function, just a 'syntactical sugar' over prototypes.
+const x = function() {}
+const y = class {}
+
+// returns 'ƒ () { [native code] }'
+Object.getPrototypeOf(x);
+Object.getPrototypeOf(y);
+
+// Initialize a constructor from a function
+const withFunction = new x();
+
+// Output
+// x {}
+// constructor: ƒ ()
+console.log(constructorFromFunction);
+
+// Initialize a constructor from a class
+const withClass = new y();
+
+// Output
+// y {}
+// constructor: class
+console.log(constructorFromClass);
+```
+
+#### Defining ECMAScript 2015 class
+
+```js
+// with function, constructor is starting with upper letter by convention
+function Hero(name, level) {
+  this.name = name;
+  this.level = level;
+}
+Hero.prototype.greet = function() {
+  return `${this.name} says hello.`;
+}
+
+// with class keyword
+class Hero {
+  constructor(name, level) {
+    this.name = name;
+    this.level = level;
+  }
+  greet() {
+    return `${this.name} says hello.`;
+  }
+}
+
+// create an instance
+const hero1 = new Hero('Varg', 1);
+```
+
+#### ECMAScript 2015 class inheritance
+
+```js
+// with function
+function Mage(name, level, spell) {
+  // Chain constructor with call
+  Hero.call(this, name, level);
+
+  // Add a new property
+  this.spell = spell;
+}
+
+// with class and extends keyword
+class Mage extends Hero {
+  constructor(name, level, spell) {
+    // Chain constructor with super
+    super(name, level);
+
+    // Add a new property
+    this.spell = spell;
+  }
+}
+
+// create an instance
+const hero2 = new Mage('Lejon', 2, 'Magic Missile');
+```
+
+#### Static methods / Getters / Setters
+
+```js
+class Vehicle {
+  constructor(model, color) {
+    // use _ to prevent name collision with getter and setter
+    this._model = model;
+    this.color = color;
+  }
+
+  static getColor(v) {
+    return v.color;
+  }
+
+  get model() {
+    return this._model;
+  }
+
+  set model(value) {
+    this._model = value;
+  }
+}
+
+let car = new Vehicle("Honda", "Purple");
+
+console.log(Vehicle.getColor(car)); // static methods, get "purple"
+console.log(car.model); // getter, get "Honda"
+car.model = "Boat"; // setter called
+console.log(car.model); // getter, get "Boat"
+```
+
+#### Factory function
+
+```js
+// with class keyword, private members are not encapsulated
+class TodoModel {
+  constructor(){
+    this.todos = [];
+  }
+
+  addToPrivateList(){
+    console.log("addToPrivateList");
+  }
+  add(val) { this.todos.push(val); }
+  get() { return this.todos; }
+  reload(){ this.todos = []; }
+}
+var todoModel = new TodoModel();
+console.log(todoModel.todos);     // []
+todoModel.addToPrivateList();     // addToPrivateList
+
+// with factory method, private members are encapsulated
+function TodoModel(){
+  var todos = [];
+
+  function addToPrivateList(){
+    console.log("addToPrivateList");
+  }
+
+  function add(val) { todos.push(val); }
+  function get() { return todos; }
+  function reload(){ todos = []; }
+
+  // todos is only accessable by add, get, reload
+  return Object.freeze({
+      add,
+      get,
+      reload
+  });
+}
+var todoModel = TodoModel();
+console.log(todoModel.todos);     // undefined
+todoModel.addToPrivateList();     // taskModel.addToPrivateList is not a function
+```
 
 **[⬆ Back to Top](#table-of-contents)**
 
@@ -647,33 +953,125 @@ isNaN("1") // false since Number("1") returns NaN
 
 ### Articles
 
- * 📜 [How-to: call() , apply() and bind() in JavaScript — Niladri Sekhar Dutta](https://www.codementor.io/niladrisekhardutta/how-to-call-apply-and-bind-in-javascript-8i1jca6jp)
- * 📜 [JavaScript’s Apply, Call, and Bind Methods are Essential for JavaScript Professionals — Richard Bovell](http://javascriptissexy.com/javascript-apply-call-and-bind-methods-are-essential-for-javascript-professionals/)
- * 📜 [WTF is this - Understanding the this keyword, call, apply, and bind in JavaScript — Tyler McGinnis](https://tylermcginnis.com/this-keyword-call-apply-bind-javascript/)
- * 📜 [Javascript: call(), apply() and bind() — Omer Goldberg](https://medium.com/@omergoldberg/javascript-call-apply-and-bind-e5c27301f7bb)
- * 📜 [The difference between call / apply / bind — Ivan Sifrim](https://medium.com/@ivansifrim/the-differences-between-call-apply-bind-276724bb825b)
- * 📜 [call(), apply() and bind() methods in JavaScript](https://tech.io/playgrounds/9799/learn-solve-call-apply-and-bind-methods-in-javascript)
- * 📜 [Mastering 'this' in JavaScript: Callbacks and bind(), apply(), call() — Michelle Gienow](https://thenewstack.io/mastering-javascript-callbacks-bind-apply-call/)
- * 📜 [JavaScript’s apply, call, and bind explained by hosting a cookout — Kevin Kononenko](https://dev.to/kbk0125/javascripts-apply-call-and-bind-explained-by-hosting-a-cookout-32jo)
- * 📜 [How AND When to use bind, call, and apply in Javascript — Eigen X](https://www.eigenx.com/blog/https/mediumcom/eigen-x/how-and-when-to-use-bind-call-and-apply-in-javascript-77b6f42898fb)
- * 📜 [JavaScript .bind() vs .apply() and .call() — Hack Sparrow](https://www.hacksparrow.com/javascript-bind-vs-apply-and-call.html)
- * 📜 [call() — MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call)
- * 📜 [bind() — MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_objects/Function/bind)
- * 📜 [apply() — MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply)
- * 📜 [What is 'this' in JavaScript? — Daniel Li](http://blog.brew.com.hk/what-is-this-in-javascript/)
- * 📜 [Let me explain to you what is `this`. (Javascript) — Jason Yu](https://dev.to/ycmjason/let-me-explain-to-you-what-is-this-javascript-44ja)
- * 📜 [Understanding the “this” Keyword in JavaScript — Pavan](https://medium.com/quick-code/understanding-the-this-keyword-in-javascript-cb76d4c7c5e8)
- * 📜 [How to understand the keyword this and context in JavaScript — Lukas Gisder-Dubé](https://medium.freecodecamp.org/how-to-understand-the-keyword-this-and-context-in-javascript-cd624c6b74b8)
+* 📜 [WTF is this - Understanding the this keyword, call, apply, and bind in JavaScript — Tyler McGinnis](https://tylermcginnis.com/this-keyword-call-apply-bind-javascript/)
 
-  ### Videos
+### Summary
 
- * 🎥 [JavaScript call, apply and bind — techsith](https://www.youtube.com/watch?v=c0mLRpw-9rI)
- * 🎥 [JavaScript Practical Applications of Call, Apply and Bind functions— techsith](https://www.youtube.com/watch?v=AYVYxezrMWA)
- * 🎥 [JavaScript (call, bind, apply) — curious aatma](https://www.youtube.com/watch?v=Uy0NOXLBraE)
- * 🎥 [Understanding Functions and 'this' In The World of ES2017 — Bryan Hughes](https://www.youtube.com/watch?v=AOSYY1_np_4)
- * 🎥 [bind and this - Object Creation in JavaScript - FunFunFunction](https://www.youtube.com/watch?v=GhbhD1HR5vk)
- * 🎥 [JavaScript Practical Applications of Call, Apply and Bind functions — techsith](https://www.youtube.com/watch?v=AYVYxezrMWA)
- * 🎥 [JS Function Methods call(), apply(), and bind() — Steve Griffith](https://www.youtube.com/watch?v=uBdH0iB1VDM)
+Binding of `this`
+
+#### Implicit Binding
+
+```js
+const user = {
+  name: 'Tyler',
+  age: 27,
+  greet() {
+    alert(`Hello, my name is ${this.name}`)
+  }
+}
+
+user.greet(); // Tyler
+```
+
+#### Explicit Binding
+
+```js
+function greet (l1, l2, l3) {
+  alert(
+    `Hello, my name is ${this.name} and I know ${l1}, ${l2}, and ${l3}`
+  )
+}
+const user = {
+  name: 'Tyler',
+  age: 27,
+}
+const languages = ['JavaScript', 'Ruby', 'Python']
+
+// binding with 'call', 'apply', 'bind' keyword
+// All alerts "Hello, my name is Tyler and I know JavaScript, Ruby, and Python"
+greet.call(user, languages[0], languages[1], languages[2]);
+greet.apply(user, languages);
+const newFn = greet.bind(user, languages[0], languages[1], languages[2]);
+newFn();
+```
+
+#### new Binding
+
+```js
+function User (name, age) {
+  this.name = name
+  this.age = age
+}
+
+// binding with 'new' keyword
+const me = new User('Tyler', 27)
+```
+
+#### Lexical Binding
+
+```js
+const user = {
+  name: 'Tyler',
+  age: 27,
+  languages: ['JavaScript', 'Ruby', 'Python'],
+  greet() {
+    const hello = `Hello, my name is ${this.name} and I know`
+    const langs = this.languages.reduce(function (str, lang, i) {
+      // here, this is referencing nothing
+      // to resolve it, use '.bind(this)'
+      if (i === this.languages.length - 1) {
+        return `${str} and ${lang}.`
+      }
+      return `${str} ${lang},`
+    }.bind(this), "")
+
+    alert(hello + langs)
+  }
+}
+
+const user = {
+  name: 'Tyler',
+  age: 27,
+  languages: ['JavaScript', 'Ruby', 'Python'],
+  greet() {
+    const hello = `Hello, my name is ${this.name} and I know`
+    const langs = this.languages.reduce((str, lang, i) => {
+      // here, this is lexically binded
+      if (i === this.languages.length - 1) {
+        return `${str} and ${lang}.`
+      }
+      return `${str} ${lang},`
+    }, "")
+
+    alert(hello + langs)
+  }
+}
+```
+
+#### window Binding
+
+```js
+function sayAge () {
+  console.log(`My age is ${this.age}`)
+}
+const user = {
+  name: 'Tyler',
+  age: 27
+}
+
+sayAge() // My age is undefined
+window.age = 27
+sayAge() // My age is 27, automatically binded with window object
+```
+
+```js
+'use strict'
+
+...
+
+// in case of strict mode, it's not binded with window object
+sayAge() // TypeError: Cannot read property 'age' of undefined
+```
 
 **[⬆ Back to Top](#table-of-contents)**
 
@@ -683,15 +1081,57 @@ isNaN("1") // false since Number("1") returns NaN
 
 ### Articles
 
- * 📜 [JavaScript For Beginners: the ‘new’ operator — Brandon Morelli](https://codeburst.io/javascript-for-beginners-the-new-operator-cee35beb669e)
- * 📜 [Let’s demystify JavaScript’s ‘new’ keyword — Cynthia Lee](https://medium.freecodecamp.org/demystifying-javascripts-new-keyword-874df126184c)
- * 📜 [Constructor, operator "new" — JavaScript.Info](https://javascript.info/constructor-new)
- * 📜 [Understanding JavaScript Constructors — Faraz Kelhini](https://css-tricks.com/understanding-javascript-constructors/)
- * 📜 [Use Constructor Functions — Openclassrooms](https://openclassrooms.com/en/courses/3523231-learn-to-code-with-javascript/4379006-use-constructor-functions)
- * 📜 [Beyond `typeof` and `instanceof`: simplifying dynamic type checks — Dr. Axel Rauschmayer](http://2ality.com/2017/08/type-right.html)
- * 📜 [What Is the Instanceof Operator in JavaScript — appendTo](https://appendto.com/2016/10/what-is-the-instanceof-operator-in-javascript/)
- * 📜 [JavaScript instanceof vs typeof — Gary Rafferty](http://garyrafferty.com/2012/12/07/JavaScript-instanceof-vs-typeof.html)
- * 📜 [Function and Object, instances of each other — Kiro Risk](https://javascriptrefined.io/function-and-object-instances-of-each-other-1e1095d5faac)
+* 📜 [Use Constructor Functions — Openclassrooms](https://openclassrooms.com/en/courses/3523231-learn-to-code-with-javascript/4379006-use-constructor-functions)
+* 📜 [Beyond `typeof` and `instanceof`: simplifying dynamic type checks — Dr. Axel Rauschmayer](http://2ality.com/2017/08/type-right.html)
+
+### Summary
+
+
+#### Constructor function
+
+```js
+// with init
+var Pastry = {
+  // initialize the pastry
+  init: function (type, flavor) {
+    this.type = type;
+    this.flavor = flavor;
+  },
+}
+
+// with constructor function
+function Pastry(type, flavor) {
+  this.type = type;
+  this.flavor = flavor;
+}
+
+// create in classic way
+const withClassic = Object.create(Pastry);
+withClassic.init("A", "a");
+
+// create in es6 way
+const withEs6 = new Pastry("A", "a");
+```
+
+#### typeof vs instanceof
+
+```js
+// typeof checks if a value is an element of a primitive type
+if (typeof value === 'string')
+
+// instanceof checks if a value is an instance of a class or a constructor function
+if (value instanceof Map)
+if (value.constructor instanceof Map)
+if (value.constructor.name instanceof Map)
+
+// use instanceof on primitive type
+class PrimitiveNumber {
+  static [Symbol.hasInstance](x) {
+    return typeof x === 'number';
+  }
+}
+console.log(123 instanceof PrimitiveNumber); // true
+```
 
 **[⬆ Back to Top](#table-of-contents)**
 
