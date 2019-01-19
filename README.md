@@ -96,6 +96,8 @@ secondFunction
 */
 ```
 
+**[⬆ Back to Top](#table-of-contents)**
+
 ---
 
 ## 2. Primitive Types
@@ -199,7 +201,7 @@ console.log(myName); // Object {firstName: "Carla"}
 
 ---
 
-## 4. Implicit, Explicit, Nominal, Structuring and Duck Typing
+## 4. Implicit, Explicit, Nominal, Structuring
 
 ### Articles
 
@@ -408,25 +410,153 @@ isNaN("1") // false since Number("1") returns NaN
 
 ---
 
-## 5. == vs === vs typeof
+## 5. == vs === vs typeof and Duck Typing
 
 ### Articles
 
- * 📜 [JavaScript Double Equals vs. Triple Equals — Brandon Morelli](https://codeburst.io/javascript-double-equals-vs-triple-equals-61d4ce5a121a)
- * 📜 [What is the difference between =, ==, and === in JS? — Codecademy](https://www.codecademy.com/en/forum_questions/558ea4f5e39efed371000508)
- * 📜 [Should I use === or == equality comparison operator in JavaScript? — Panu Pitkamaki](https://bytearcher.com/articles/equality-comparison-operator-javascript/)
- * 📜 [== vs === JavaScript: Double Equals and Coercion — AJ Meyghani](https://www.codementor.io/javascript/tutorial/double-equals-and-coercion-in-javascript)
- * 📜 [Why Use the Triple-Equals Operator in JavaScript? — Louis Lazaris](https://www.impressivewebs.com/why-use-triple-equals-javascipt/)
- * 📜 [What is the difference between == and === in JavaScript? — Craig Buckler](https://www.oreilly.com/learning/what-is-the-difference-between-and-in-javascript)
- * 📜 [Why javascript's typeof always return "object"? — Stack Overflow](https://stackoverflow.com/questions/3787901/why-javascripts-typeof-always-return-object)
- * 📜 [Checking Types in Javascript — Toby Ho](http://tobyho.com/2011/01/28/checking-types-in-javascript/)
- * 📜 [How to better check data types in JavaScript — Webbjocke](https://webbjocke.com/javascript-check-data-types/)
- * 📜 [Checking for the Absence of a Value in JavaScript — Tomer Aberbach](https://tomeraberba.ch/html/post/checking-for-the-absence-of-a-value-in-javascript.html)
+* 📜 [JavaScript Double Equals vs. Triple Equals — Brandon Morelli](https://codeburst.io/javascript-double-equals-vs-triple-equals-61d4ce5a121a)
+* 📜 [Checking Types in Javascript — Toby Ho](http://tobyho.com/2011/01/28/checking-types-in-javascript/)
+* 📜 [Checking for the Absence of a Value in JavaScript — Tomer Aberbach](https://tomeraberba.ch/html/post/checking-for-the-absence-of-a-value-in-javascript.html)
 
-### Videos
+### Summary
 
- * 🎥 [JavaScript - The typeof operator — Java Brains](https://www.youtube.com/watch?v=ol_su88I3kw)
- * 🎥 [Javascript typeof operator — DevDelight](https://www.youtube.com/watch?v=qPYhTPt_SbQ)
+#### == vs ===
+
+`==` : loose equality (value equality). Performs implicit type coercion.
+
+```js
+77 == '77' // true, `77` is converted to number 77
+
+// falsy values
+false == false // true, false is a falsy value
+false == 0 // true, 0 is a falsy value
+false == "" // true, "" is a falsy value
+false == null // true, null is a falsy value
+false == undefined // true, undefined is a falsy value
+false == NaN // true, NaN is a falsy value
+
+// between falsy values (false, 0, "")
+false == 0 // true
+0 == "" // true
+"" == false // true
+
+// between falsy values (null, undefined). both represent the absence of a value
+null == null // true
+undefined == undefined // true
+null == undefined // true
+
+// compasition null with any other value will return false
+null == 0 // false
+
+// NaN, not equivalent to anything
+NaN == null // false
+NaN == undefined // false
+NaN == NaN // false
+```
+
+`===` : strict equality (value and type equality). Use it in most of the case.
+
+```js
+77 == 77 // true
+77 === '77' // false
+'cat' === 'dog' // false
+false === 0 // false
+```
+
+#### Type checking
+
+`typeof`
+
+```js
+typeof 3 // "number"
+typeof "abc" // "string"
+typeof true // "boolean"
+typeof {} // "object"
+typeof [] // "object"
+typeof function(){} // "function"
+typeof undefined // "undefined"
+typeof null // "object"
+```
+
+`instanceof`
+
+```js
+// simple prototype
+function Animal(){}
+var a = new Animal()
+
+a instanceof Animal // true
+a.constructor === Animal // true
+
+// prototype chaining
+function Cat(){}
+Cat.prototype = new Animal
+Cat.prototype.constructor = Cat
+
+var felix = new Cat
+felix instanceof Cat // true
+felix instanceof Animal // true
+felix.constructor === Cat // true
+felix.constructor === Animal // false
+
+// works for all objects
+[1, 2, 3] instanceof Array // true
+/abc/ instanceof RegExp // true
+({}) instanceof Object // true
+(function(){}) instanceof Function // true
+
+// do not works for primitive types
+3 instanceof Number // false
+true instanceof Boolean // false
+'abc' instanceof String // false
+
+// but it words for null and undefined
+null instanceof Boolean // false
+undefined instanceof Array // false
+```
+
+#### Checking the absence of a value
+
+`undefined`
+
+```js
+console.log(typeof undefined) // undefined
+
+// default value of declared
+var x
+console.log(x) // undefined
+
+// undeclared object property
+var obj = {}
+console.log(obj.a) // undefined
+
+// default function return value
+function f() {}
+console.log(f()) // undefined
+```
+
+`null`
+
+```js
+console.log(typeof null) // object, for backword compatibility
+
+// dom element checking
+console.log(document.getElementById('some-id-which-no-element-has')) // null
+```
+
+### Duck typing
+
+If it walks like a duck and it quacks like a duck, then it must be a duck.
+
+```js
+// Determine type by its behavior.
+isArray = (o) => !(typeof o.length == "undefined");
+
+let arr = [];
+let obj = {};
+isArray(arr); // true
+isArray(obj); // false
+```
 
 **[⬆ Back to Top](#table-of-contents)**
 
@@ -436,24 +566,53 @@ isNaN("1") // false since Number("1") returns NaN
 
 ### Articles
 
- * 📜 [You Don't Know JS: Scope & Closures [Book] — Kyle Simpson](https://github.com/getify/You-Dont-Know-JS/blob/master/scope%20%26%20closures/ch3.md)
- * 📜 [JavaScript Functions — Understanding The Basics — Brandon Morelli](https://codeburst.io/javascript-functions-understanding-the-basics-207dbf42ed99)
- * 📜 [The battle between Function Scope and Block Scope — Marius Herring](http://www.deadcoderising.com/2017-04-11-es6-var-let-and-const-the-battle-between-function-scope-and-block-scope/)
- * 📜 [Emulating Block Scope in JavaScript — Josh Clanton](http://adripofjavascript.com/blog/drips/emulating-block-scope-in-javascript.html)
- * 📜 [The Difference Between Function and Block Scope in JavaScript — Joseph Cardillo](https://medium.com/@josephcardillo/the-difference-between-function-and-block-scope-in-javascript-4296b2322abe)
- * 📜 [Function Scopes and Block Scopes in JavaScript — Samer Buna](https://edgecoders.com/function-scopes-and-block-scopes-in-javascript-25bbd7f293d7)
- * 📜 [Understanding Scope and Context in JavaScript | Ryan Morr](http://ryanmorr.com/understanding-scope-and-context-in-javascript/)
- * 📜 [JavaScript Scope and Closures — Zell Liew](https://css-tricks.com/javascript-scope-closures/)
- * 📜 [Understanding Scope in JavaScript — Wissam Abirached](https://developer.telerik.com/topics/web-development/understanding-scope-in-javascript/)
- * 📜 [Speaking JavaScript - Variables: Scopes, Environments, and Closures — Dr. Axel Rauschmayer](http://speakingjs.com/es5/ch16.html)
- * 📜 [Understanding Scope in JavaScript ― Hammad Ahmed](https://scotch.io/tutorials/understanding-scope-in-javascript)
+* 📜 [The battle between Function Scope and Block Scope — Marius Herring](http://www.deadcoderising.com/2017-04-11-es6-var-let-and-const-the-battle-between-function-scope-and-block-scope/)
 
-### Videos
+### Summary
 
- * 🎥 [What Makes Javascript Weird ... and Awesome pt. 4 — LearnCode.academy](https://www.youtube.com/watch?v=SBwoFkRjZvE)
- * 🎥 [Variable Scope in JavaScript — Kirupa Chinnathambi](https://www.youtube.com/watch?v=dhp57T3p760)
- * 🎥 [JavaScript Block Scope and Function Scope — mmtuts](https://www.youtube.com/watch?v=aK_nuUAdr8E)
- * 🎥 [What the Heck is Lexical Scope? — NWCalvank](https://www.youtube.com/watch?v=GhNA0r10MmA)
+`var` : a function scope
+
+```js
+function myFunc() {
+  var name = 'Luke'
+  console.log(name); // 'Luke'
+}
+myFunc();
+console.log(name); // name is not defined
+
+if (true) {
+  var name = 'Luke'
+}
+console.log(name); // 'Luke'. WTF
+
+var printsToBeExecuted = [];
+for (var i = 0; i < 3; i++) {
+  printsToBeExecuted.push(() => console.log(i));
+}
+printsToBeExecuted.forEach(f => f());   // 3, 3, 3
+```
+
+`let, const` : a block scope
+
+```js
+function myFunc() {
+  let name = 'Luke'
+  console.log(name); // 'Luke'
+}
+myFunc();
+console.log(name); // name is not defined
+
+if (true) {
+  let name = 'Luke'
+}
+console.log(name); // name is not defined
+
+var printsToBeExecuted = [];
+for (let i = 0; i < 3; i++) {
+  printsToBeExecuted.push(() => console.log(i));
+}
+printsToBeExecuted.forEach(f => f());  // 0, 1, 2
+```
 
 **[⬆ Back to Top](#table-of-contents)**
 
@@ -463,17 +622,97 @@ isNaN("1") // false since Number("1") returns NaN
 
 ### Articles
 
- * 📜 [All you need to know about Javascript's Expressions, Statements and Expression Statements — Promise Tochi](https://dev.to/promhize/javascript-in-depth-all-you-need-to-know-about-expressions-statements-and-expression-statements-5k2)
- * 📜 [Function Expressions vs Function Declarations — Paul Wilkins](https://www.sitepoint.com/function-expressions-vs-declarations/)
- * 📜 [JavaScript Function — Declaration vs Expression — Ravi Roshan](https://medium.com/@raviroshan.talk/javascript-function-declaration-vs-expression-f5873b8c7b38)
- * 📜 [Function Declarations vs. Function Expressions — Mandeep Singh](https://medium.com/@mandeep1012/function-declarations-vs-function-expressions-b43646042052)
- * 📜 [Function Declarations vs. Function Expressions — Anguls Croll](https://javascriptweblog.wordpress.com/2010/07/06/function-declarations-vs-function-expressions/)
+* 📜 [All you need to know about Javascript's Expressions, Statements and Expression Statements — Promise Tochi](https://dev.to/promhize/javascript-in-depth-all-you-need-to-know-about-expressions-statements-and-expression-statements-5k2)
+* 📜 [JavaScript Function — Declaration vs Expression — Ravi Roshan](https://medium.com/@raviroshan.talk/javascript-function-declaration-vs-expression-f5873b8c7b38)
 
-### Videos
+### Summary
 
- * 🎥 [Expressions vs. Statements in JavaScript — Hexlet](https://www.youtube.com/watch?v=WVyCrI1cHi8)
- * 🎥 [JavaScript - Expression vs. Statement — WebTunings](https://www.youtube.com/watch?v=3jDpNGJkupA)
- * 🎥 [Function Statements and Function Expressions — Codeacademy](https://www.youtube.com/watch?v=oB5rH_9bqAI)
+#### Expression
+
+Expression : produces value
+
+```js
+// expression
+2 + 2 * 3 / 2
+(Math.random() * (100 - 20)) + 20
+functionCall()
+true && functionCall()
+
+// multiple expression with ',' returns only last one
+1+1, 2+2, 3+3
+console.log( (1+2,3,4) ) //4
+console.log( (2, 9/3, function () {}) ) // function (){}
+console.log( (3, true ? 2+2 : 1+1) ) // 4
+function foo () {return 1, 2, 3, 4}; foo() // 4
+
+// ; makes expression to expression statement
+2+2; // expression statement
+foo(); // expression statement
+```
+
+IIFEs (Immediately Invoked Function Expressions)
+
+```js
+(function (arg) {
+  console.log("immediately invoke anonymous function call, " + arg)
+})("arg!!") // "immediately invoke anonymous function call, arg!!"
+
+(function () {
+  return 3
+})() // 3
+
+console.log((function () {
+  return 3
+})()) // 3
+```
+
+#### Statement
+
+Statement : performs action
+
+```js
+// statement
+if (true) {
+  console.log(9+9);
+}
+
+2+2; // expression statement
+foo(); // expression statement
+
+// multiple statement with ;
+const a; function foo () {}; const b = 2
+
+// {} group expression statements and statements called block statement
+{var a = "b"; func(); 2+2} // 4
+```
+
+#### Function declaration vs expression
+
+```js
+// function declaration
+var result = add(10, 20); // 30 [Executing before declaring]
+function add(param1, param2) {
+    return param1 + param2 ;
+}
+
+// function expression
+var result = minus(10, 20); // Uncaught TypeError: add is not a function
+var minus = function(param1, param2) {
+    return param1 - param2 ;
+}
+var result = minus(10, 20); // -10 [Executing after declaring]
+
+// Named function expressions. Used in recursion
+var addVariable = function addFunction(param1, param2) {
+   var res = param1 + param2;
+   if (res === 30) {
+     res = addFunction(res, 10);
+   }
+   return res;
+}
+var result = addFunction(num1, num2); // Uncaught ReferenceError: addFunction is not defined
+var result = addVariable(10, 20); // 40
+```
 
 **[⬆ Back to Top](#table-of-contents)**
 
@@ -483,25 +722,224 @@ isNaN("1") // false since Number("1") returns NaN
 
 ### Articles
 
- * 📜 [Mastering Immediately-Invoked Function Expressions ― Chandra Gundamaraju](https://medium.com/@vvkchandra/essential-javascript-mastering-immediately-invoked-function-expressions-67791338ddc6)
- * 📜 [Do ES6 Modules make the case of IIFEs obsolete?](https://hashnode.com/post/do-es6-modules-make-the-case-of-iifes-obsolete-civ96wet80scqgc538un20es0)
- * 📜 [A 10 minute primer to JavaScript modules, module formats, module loaders and module bundlers ― Jurgen Van de Moere](https://www.jvandemo.com/a-10-minute-primer-to-javascript-modules-module-formats-module-loaders-and-module-bundlers/)
- * 📜 [Modules ― Exploring JS](http://exploringjs.com/es6/ch_modules.html)
- * 📜 [ES modules: A cartoon deep-dive — Lin Clark](https://hacks.mozilla.org/2018/03/es-modules-a-cartoon-deep-dive/)
- * 📜 [Understanding ES6 Modules — Craig Buckler](https://www.sitepoint.com/understanding-es6-modules/)
- * 📜 [An overview of ES6 Modules in JavaScript — Brent Graham](https://blog.cloud66.com/an-overview-of-es6-modules-in-javascript/)
- * 📜 [ES6 Modules in Depth — Nicolás Bevacqua](https://ponyfoo.com/articles/es6-modules-in-depth)
- * 📜 [ES6 modules, Node.js and the Michael Jackson Solution — Alberto Gimeno](https://medium.com/dailyjs/es6-modules-node-js-and-the-michael-jackson-solution-828dc244b8b)
- * 📜 [JavaScript Modules: A Beginner’s Guide — Preethi Kasireddy](https://medium.freecodecamp.org/javascript-modules-a-beginner-s-guide-783f7d7a5fcc)
+* 📜 [A 10 minute primer to JavaScript modules, module formats, module loaders and module bundlers ― Jurgen Van de Moere](https://www.jvandemo.com/a-10-minute-primer-to-javascript-modules-module-formats-module-loaders-and-module-bundlers/)
+* 📜 [MDN : es6 export](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Statements/export)
+* 📜 [MDN : es6 import](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Statements/import)
 
-### Videos
+### Summary
 
- * 🎥 [Immediately Invoked Function Expression - Beau teaches JavaScript — freeCodeCamp](https://www.youtube.com/watch?v=3cbiZV4H22c)
- * 🎥 [Understanding JavaScript IIFE](https://www.youtube.com/watch?v=I5EntfMeIIQ)
- * 🎥 [JavaScript Modules: ES6 Import and Export — Kyle Robinson](https://www.youtube.com/watch?v=_3oSWwapPKQ)
- * 🎥 [ES6 - Modules — Ryan Christiani](https://www.youtube.com/watch?v=aQr2bV1BPyE)
- * 🎥 [ES6 Modules in the Real World — Sam Thorogood](https://www.youtube.com/watch?v=fIP4pjAqCtQ)
- * 🎥 [ES6 Modules — TempleCoding](https://www.youtube.com/watch?v=5P04OK6KlXA)
+#### ES5 module patern
+
+Immediately Invoked Function Expression (IIFE)
+
+```javascript
+// Function expression
+(function(){
+  console.log('test');
+})
+// => returns function(){ console.log('test') }
+
+// Immediately Invoked Function Expression
+(function(){
+  console.log('test');
+})()
+// => writes 'test' to the console and returns undefined
+```
+
+Revealing Module pattern
+
+```javascript
+// Expose module as global variable
+var singleton = function() {
+
+  // Inner logic
+  function sayHello(){
+    console.log('Hello');
+  }
+
+  // Expose API
+  return {
+    sayHello: sayHello
+  }
+}()
+// => Hello
+singleton.sayHello();
+
+// Expose module as global variable. this is a constructor
+var Module = function() {
+
+  // Inner logic
+  function sayHello(){
+    console.log('Hello');
+  }
+
+  // Expose API
+  return {
+    sayHello: sayHello
+  }
+}
+// use constructor
+var module = new Module();
+// => Hello
+module.sayHello();
+```
+
+### Legacy module format
+
+Asynchronous Module Definition (AMD) : used in browsers
+
+```javascript
+// Calling define with a dependency array and a factory function
+define(['dep1', 'dep2'], function (dep1, dep2) {
+    //Define the module value by returning a value.
+    return function () {};
+});
+```
+
+CommonJS : used in Node.js
+
+```javascript
+// import
+var dep1 = require('./dep1');
+var dep2 = require('./dep2');
+
+// export
+module.exports = function(){
+  // ...
+}
+```
+
+Universal Module Definition (UMD) : used in both browsers and Node.js
+
+```javascript
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+      define(['b'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    // Node. Does not work with strict CommonJS, but
+    // only CommonJS-like environments that support module.exports,
+    // like Node.
+    module.exports = factory(require('b'));
+  } else {
+    // Browser globals (root is window)
+    root.returnExports = factory(root.b);
+  }
+}(this, function (b) {
+  // use b in some fashion.
+
+  // Just return a value to define the module export.
+  // This example returns an object, but the module
+  // can return a function as the exported value.
+  return {};
+}));
+```
+
+System.register : designed to support the ES6 module syntax in ES5
+
+```javascript
+// from
+import { p as q } from './dep';
+
+var s = 'local';
+
+export function func() {
+  return q;
+}
+
+export class C {
+}
+
+// to
+System.register(['./dep'], function($__export, $__moduleContext) {
+  var s, C, q;
+  function func() {
+    return q;
+  }
+  $__export('func', func);
+  return {
+    setters: [
+    // every time a dependency updates an export,
+    // this function is called to update the local binding
+    // the setter array matches up with the dependency array above
+    function(m) {
+      q = m.p;
+    }
+    ],
+    execute: function() {
+      // use the export function to update the exports of this module
+      s = 'local';
+      $__export('C', C = $traceurRuntime.createClass(...));
+    }
+  };
+});
+```
+
+### ES6 module format
+
+An modern module format.
+
+Unfortunately, the native module format is not yet supported by all browsers. We need a transpiler like Babel to transpile our code to an ES5 module format such as AMD or CommonJS before we can actually run our code in the browser.
+
+export
+
+```javascript
+// exports a constant
+export const foo = Math.sqrt(2);
+
+// named export myFunction, myClass
+// default export Special one
+export {myFunction, myClass, Special as default};
+
+// export function as default
+export default function() {}
+
+// export class as default
+export default class {}
+
+// import and export directly (not a default module)
+export * from './other-module';
+
+// import and export default module directly
+export {default} from 'mod';
+```
+
+import
+
+```javascript
+// import an entire module contents with an alias
+import * as myModule from '/modules/my-module.js';
+
+// import a single export from a module
+import {myExport} from '/modules/my-module.js'
+
+// import multiple exports from module
+import {foo, bar} from '/modules/my-module.js';
+
+// import an export with a more convenient alias
+import {reallyReallyLongModuleExportName as shortName} from '/modules/my-module.js';
+
+// import default module
+import myDefault from '/modules/my-module.js';
+
+// import default and named export
+import myDefault, {foo, bar} from '/modules/my-module.js';
+
+// dynamic import. return promise
+import('/modules/my-module.js')
+  .then((module) => {
+    // Do something with the module.
+  });
+
+// dynamic import with await keyword
+let module = await import('/modules/my-module.js');
+```
+
+### Module bundler
+
+* Browserify : bundler for CommonJS modules
+* Webpack : bundler for AMD, CommonJS, ES6 modules
+* Rollup : brand new one. bundler for standardized ES module format
 
 **[⬆ Back to Top](#table-of-contents)**
 
@@ -511,24 +949,23 @@ isNaN("1") // false since Number("1") returns NaN
 
 ### Articles
 
- * 📜 [JavaScript Event Loop Explained — Anoop Raveendran](https://medium.com/front-end-hacking/javascript-event-loop-explained-4cd26af121d4)
- * 📜 [The JavaScript Event Loop: Explained — Erin Sweson-Healey](https://blog.carbonfive.com/2013/10/27/the-javascript-event-loop-explained/)
- * 📜 [What is the Event Loop in Javascript — WP Tutor.io](https://www.wptutor.io/web/js/javascript-event-loop)
- * 📜 [Understanding JS: The Event Loop — Alexander Kondov](https://hackernoon.com/understanding-js-the-event-loop-959beae3ac40)
- * 📜 [Understanding the JavaScript Event Loop — Ashish Gupta](https://www.zeolearn.com/magazine/understanding-the-javascript-event-loop)
- * 📜 [Event Loop in Javascript — Manjula Dube](https://code.likeagirl.io/what-the-heck-is-event-loop-1e414fccef49)
- * 📜 [The JavaScript Event Loop — Flavio Copes](https://flaviocopes.com/javascript-event-loop/)
- * 📜 [How JavaScript works: Event loop — Alexander Zlatkov](https://blog.sessionstack.com/how-javascript-works-event-loop-and-the-rise-of-async-programming-5-ways-to-better-coding-with-2f077c4438b5)
- * 📜 [Tasks, microtasks, queues and schedules — Jake Archibald](https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/)
- * 📜 [Visualising the JavaScript Event Loop with a Pizza Restaurant analogy — Priyansh Jain](https://dev.to/presto412/visualising-the-javascript-event-loop-with-a-pizza-restaurant-analogy-47a8)
+* 📜 [Understanding the JavaScript Event Loop — Ashish Gupta](https://www.zeolearn.com/magazine/understanding-the-javascript-event-loop)
 
-### Videos
+### Summary
 
- * 🎥 [What the heck is the event loop anyway? | JSConf EU — Philip Roberts](https://www.youtube.com/watch?v=8aGhZQkoFbQ)
- * 🎥 [JavaScript Event Loop — ComScience Simplified](https://www.youtube.com/watch?v=XzXIMZMN9k4)
- * 🎥 [I'm stuck in an Event Loop — Philip Roberts](https://www.youtube.com/watch?v=6MXRNXXgP_0)
- * 🎥 [In The Loop - Jake Archibald | JSConf.Asia 2018](https://www.youtube.com/watch?v=cCOL7MC4Pl0)
- * 🎥 [Desmitificando el Event Loop (Spanish)](https://www.youtube.com/watch?v=Eqq2Rb7LzYE)
+Event Loop process
+
+callback -> placed in event table -> to other work
+         -> placed to callback queue when its done and call stack is empty
+         -> execute
+
+```javascript
+console.log("I'll execute first!");
+setTimeout(() => {
+   console.log("Third. I'll execute only when stack is empty :(");
+}, 0);
+console.log("I'll execute second");
+```
 
 
 **[⬆ Back to Top](#table-of-contents)**
@@ -539,20 +976,74 @@ isNaN("1") // false since Number("1") returns NaN
 
 ### Articles
 
- * 📜 [setTimeout and setInterval — JavaScript.Info](https://javascript.info/settimeout-setinterval)
- * 📜 [Why not to use setInterval — Akanksha Sharma](https://dev.to/akanksha_9560/why-not-to-use-setinterval--2na9)
- * 📜 [setTimeout VS setInterval — Develoger](https://develoger.com/settimeout-vs-setinterval-cff85142555b)
- * 📜 [Using requestAnimationFrame — Chris Coyier](https://css-tricks.com/using-requestanimationframe/)
- * 📜 [Understanding JavaScript's requestAnimationFrame() — JavaScript Kit](http://www.javascriptkit.com/javatutors/requestanimationframe.shtml)
- * 📜 [Handling time intervals in JavaScript - Amit Merchant](https://www.amitmerchant.com/Handling-Time-Intervals-In-Javascript/)
+* 📜 [setTimeout and setInterval — JavaScript.Info](https://javascript.info/settimeout-setinterval)
+* 📜 [MDN : requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame)
 
-### Videos
+### Summary
 
- * 🎥 [Javascript: How setTimeout and setInterval works — Coding Blocks India](https://www.youtube.com/watch?v=6bPKyl8WYWI)
- * 🎥 [setTimeout and setInterval in JavaScript — techsith](https://www.youtube.com/watch?v=TbCgGWe8LN8)
- * 🎥 [JavaScript Timers — Steve Griffith](https://www.youtube.com/watch?v=0VVJSvlUgtg)
- * 🎥 [JavaScript setTimeout, setInterval & clearInterval — DoingITeasyChannel](https://www.youtube.com/watch?v=BVALvvy5bZY)
- * 🎥 [JavaScript setTimeOut and setInterval Explained — Theodore Anderson](https://www.youtube.com/watch?v=mVKfrWCOB60)
+* setTimeout : run a function once after the interval of time
+* setInterval : run a function regularly with the interval between the runs
+
+```javascript
+// plain
+function hello() {
+  console.log("Hello");
+}
+setTimeout(hello, 1000);
+/* setInterval(hello, 1000); */
+
+// with arguments
+function make(phrase, who) {
+  console.log(phrase + ', ' + who);
+}
+setTimeout(make, 1000, "Hello", "John");
+/* setInterval(make, 1000, "Hello", "John"); */
+
+// with arrow
+setTimeout((a, b) => console.log(a + ", " + b), 1000, "Hey", "guy");
+/* setInterval((a, b) => console.log(a + ", " + b), 1000, "Hey", "guy"); */
+
+// cleartimeout
+let timerId = setTimeout(...);
+/* let timerId = setInterval(...); */
+clearTimeout(timerId);
+/* clearInterval(timerId); */
+
+// repeat with the interval of 2 seconds
+let timerId = setInterval(() => alert('tick'), 2000);
+
+// after 5 seconds stop
+setTimeout(() => { clearInterval(timerId); alert('stop'); }, 5000);
+```
+
+* setTimeout(..., 0) : used in lazy complete
+
+```javascript
+// This schedules the execution of func as soon as possible.
+// But scheduler will invoke it only after the current code is complete.
+setTimeout(() => console.log("World"), 0);
+console.log("Hello");
+// => "Hello" -> "World"
+```
+
+* requestAnimationFrame : tells the browser that you wish to perform an animation and requests that the browser call a specified function to update an animation before the next repaint
+
+```javascript
+var start = null;
+var element = document.getElementById('SomeElementYouWantToAnimate');
+
+function step(timestamp) {
+  if (!start) start = timestamp;
+  var progress = timestamp - start;
+  element.style.transform = 'translateX(' + Math.min(progress / 10, 200) + 'px)';
+  if (progress < 2000) {
+    window.requestAnimationFrame(step);
+  }
+}
+
+// step is called after a current paint complete
+window.requestAnimationFrame(step);
+```
 
 **[⬆ Back to Top](#table-of-contents)**
 
